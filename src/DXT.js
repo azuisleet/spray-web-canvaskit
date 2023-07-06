@@ -64,7 +64,7 @@ function calculatePCA(pixels) {
 
     // Don't consider any transparent pixels
     if (blockState.hasAlpha) {
-        vecs = vecs.filter(vec => vec[3] < AlphaTest);
+        vecs = vecs.filter(vec => vec[3] >= 0.5);
     }
 
     vec4.set(principalMean, 0, 0, 0, 0);
