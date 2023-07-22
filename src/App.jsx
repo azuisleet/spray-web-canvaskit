@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {convertImageToVTF, filterModeNearest} from "./encoder.js";
+import {convertImageToVTF, qualityModeCubic} from "./encoder.js";
 import CanvasKitInit from "canvaskit-wasm/bin/canvaskit.js";
 import CanvasKitWasm from "canvaskit-wasm/bin/canvaskit.wasm?url";
 
@@ -55,7 +55,7 @@ function App() {
             .then(arrayBuffer => {
                 console.log(`Loading file ${file.name}`);
                 job.current = file;
-                return convertImageToVTF(canvasKit, arrayBuffer, setProgress, filterModeNearest)
+                return convertImageToVTF(canvasKit, arrayBuffer, setProgress, qualityModeCubic)
             })
             .then((blob) => {
                 job.current = null;

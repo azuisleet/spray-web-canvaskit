@@ -9,10 +9,11 @@ const header = Uint8Array.of(
     0x00, 0x00, 0x00, 0x01
 );
 
-export const filterModeNearest = 0;
-export const filterModeLinear = 1;
+export const qualityModeNearest = 0;
+export const qualityModeLinear = 1;
+export const qualityModeCubic = 2;
 
-export function convertImageToVTF(canvasKit, arrayBuffer, setProgress, filterMode) {
+export function convertImageToVTF(canvasKit, arrayBuffer, setProgress, qualityMode) {
     const animatedImage = canvasKit.MakeAnimatedImageFromEncoded(arrayBuffer);
 
     const frameCount = animatedImage.getFrameCount() || 1;
@@ -92,7 +93,10 @@ export function convertImageToVTF(canvasKit, arrayBuffer, setProgress, filterMod
                 const frame = animatedImage.makeImageAtCurrentFrame();
 
                 canvas.clear(canvasKit.TRANSPARENT);
-                canvas.drawImageRectOptions(frame, srcRect, scaledRect, filterMode === filterModeNearest ? canvasKit.FilterMode.Nearest : canvasKit.FilterMode.Linear, canvasKit.MipmapMode.None);
+                if (qualityMode === qualityModeCubic)
+                    canvas.drawImageRectCubic(frame, srcRect, scaledRect, 1 / 3, 1 / 3);
+                else
+                    canvas.drawImageRectOptions(frame, srcRect, scaledRect, qualityMode === qualityModeNearest ? canvasKit.FilterMode.Nearest : canvasKit.FilterMode.Linear, canvasKit.MipmapMode.None);
                 surface.flush();
 
                 const pixels = canvas.readPixels(0, 0, surface.imageInfo());
